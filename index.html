@@ -681,11 +681,42 @@
             height: 100%;
             object-fit: cover;
             display: block;
-            transition: transform 0.5s ease;
+            filter: blur(18px);
+            transition: filter 0.6s ease, transform 0.5s ease;
         }
 
-        .album-card:hover img {
+        .album-card:hover img,
+        .album-card.revealed img {
+            filter: blur(0px);
             transform: scale(1.08);
+        }
+
+        .album-card .blur-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.8rem;
+            z-index: 3;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .album-card .blur-hint span {
+            display: block;
+            font-size: 0.7rem;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+        }
+
+        .album-card:hover .blur-hint,
+        .album-card.revealed .blur-hint {
+            opacity: 0;
         }
 
         .album-card .photo-overlay {
@@ -699,7 +730,8 @@
             transition: opacity 0.4s ease;
         }
 
-        .album-card:hover .photo-overlay {
+        .album-card:hover .photo-overlay,
+        .album-card.revealed .photo-overlay {
             opacity: 1;
         }
 
@@ -1038,36 +1070,42 @@
     <!-- ============ SECTION 5: PHOTO ALBUM ============ -->
     <section class="album-section">
         <h2>Distance Means Nothing</h2>
-        <p class="album-subtitle">when someone means everything 💕 tap to view</p>
+        <p class="album-subtitle">when someone means everything 💕 these are just for your eyes</p>
         <div class="album-grid" id="albumGrid">
             <!-- FaceTime screenshot -->
-            <div class="album-card" data-caption="Miles apart, hearts together 📱💕" onclick="openLightbox(this)">
+            <div class="album-card" data-caption="Miles apart, hearts together 📱💕" onclick="handleAlbumClick(this)">
                 <img src="photos/1.jpg" alt="Our FaceTime calls">
+                <div class="blur-hint">👀<span>tap to reveal</span></div>
                 <div class="photo-overlay"><p>Our FaceTime calls 📱</p></div>
             </div>
             <!-- Love you collage (tall) -->
-            <div class="album-card tall" data-caption="Love you, always 💖" onclick="openLightbox(this)">
+            <div class="album-card tall" data-caption="Love you, always 💖" onclick="handleAlbumClick(this)">
                 <img src="photos/2.jpg" alt="Love you">
+                <div class="blur-hint">💕<span>tap to reveal</span></div>
                 <div class="photo-overlay"><p>Love you, always 💖</p></div>
             </div>
             <!-- Streaks together -->
-            <div class="album-card" data-caption="Every moment with you is my favorite 💗" onclick="openLightbox(this)">
+            <div class="album-card" data-caption="Every moment with you is my favorite 💗" onclick="handleAlbumClick(this)">
                 <img src="photos/3.jpg" alt="Together">
+                <div class="blur-hint">🤍<span>tap to reveal</span></div>
                 <div class="photo-overlay"><p>Us being us 🤍</p></div>
             </div>
             <!-- Close up together -->
-            <div class="album-card" data-caption="My safe place 🥺" onclick="openLightbox(this)">
+            <div class="album-card" data-caption="My safe place 🥺" onclick="handleAlbumClick(this)">
                 <img src="photos/4.jpg" alt="Together">
+                <div class="blur-hint">🥺<span>tap to reveal</span></div>
                 <div class="photo-overlay"><p>My safe place 🥺</p></div>
             </div>
             <!-- Smiling together -->
-            <div class="album-card" data-caption="That smile makes everything better ✨" onclick="openLightbox(this)">
+            <div class="album-card" data-caption="That smile makes everything better ✨" onclick="handleAlbumClick(this)">
                 <img src="photos/5.jpg" alt="Your smile">
+                <div class="blur-hint">✨<span>tap to reveal</span></div>
                 <div class="photo-overlay"><p>That smile though ✨</p></div>
             </div>
             <!-- Close up cute -->
-            <div class="album-card" data-caption="Raghav loves Vidhu. That's it. That's the caption. ❤️" onclick="openLightbox(this)">
+            <div class="album-card" data-caption="Raghav loves Vidhu. That's it. That's the caption. ❤️" onclick="handleAlbumClick(this)">
                 <img src="photos/6.jpg" alt="Always">
+                <div class="blur-hint">❤️<span>tap to reveal</span></div>
                 <div class="photo-overlay"><p>Forever yours ❤️</p></div>
             </div>
         </div>
@@ -1270,6 +1308,17 @@
                 setTimeout(() => sparkle.remove(), 1000);
             }
         });
+
+        // ============ ALBUM TAP TO REVEAL ============
+        function handleAlbumClick(card) {
+            if (!card.classList.contains('revealed')) {
+                // First tap: reveal the photo
+                card.classList.add('revealed');
+            } else {
+                // Second tap: open lightbox
+                openLightbox(card);
+            }
+        }
 
         // ============ LIGHTBOX ============
         let currentLightboxIndex = 0;
